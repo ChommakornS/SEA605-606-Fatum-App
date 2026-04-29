@@ -1,0 +1,54 @@
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fatum-371c1",
+          "appId": "1:682229756288:android:1c592c6762a25607dc5165",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "fatum-371c1",
+          "appId": "1:682229756288:ios:1614285a569804a7dc5165",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "fatum-371c1",
+          "appId": "1:682229756288:ios:1614285a569804a7dc5165",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fatum-371c1",
+          "configurations": {
+            "android": "1:682229756288:android:1c592c6762a25607dc5165",
+            "ios": "1:682229756288:ios:1614285a569804a7dc5165",
+            "macos": "1:682229756288:ios:1614285a569804a7dc5165",
+            "web": "1:682229756288:web:0f4ef4601a494e1fdc5165"
+          }
+        }
+      }
+    }
+  }
+}
