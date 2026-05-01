@@ -113,6 +113,11 @@ class _AwakeningPageState extends State<AwakeningPage> {
 
   String _parseError(Object e) {
     final msg = e.toString();
+    
+    // ✅ User cancelled Google sign-in — show nothing
+    if (msg.contains('sign_in_canceled') || msg.contains('canceled')) return '';
+    if (msg.contains('popup-closed-by-user') || msg.contains('popup_closed')) return '';
+
     if (msg.contains('user-not-found') || msg.contains('wrong-password') || msg.contains('invalid-credential')) {
       return 'Invalid email or password.';
     }
@@ -183,7 +188,7 @@ class _AwakeningPageState extends State<AwakeningPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildFields(),
-                            if (_errorMessage != null) ...[
+                            if (_errorMessage != null && _errorMessage!.isNotEmpty) ...[ //fix
                               const SizedBox(height: 12),
                               Text(
                                 _errorMessage!,
