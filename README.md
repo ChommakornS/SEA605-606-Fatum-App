@@ -10,7 +10,7 @@
 
 ## 🩸 Inspiration
 
-FATUM was heavily inspired by [ENHYPEN](https://www.youtube.com/watch?v=47SAocGDKrw&list=RD47SAocGDKrw&start_radio=1&pp=ygUSZW5oeXBlbiBkYXJrIGJsb29koAcB)'s **DARK BLOOD** concept and atmosphere — combining gothic aesthetics, fate, blood, prophecy, and dark fantasy storytelling into an interactive tarot experience.
+FATUM was heavily inspired by ENHYPEN's **DARK BLOOD** concept and atmosphere — combining gothic aesthetics, fate, blood, prophecy, and dark fantasy storytelling into an interactive tarot experience.
 
 🎵 Inspiration Reference:  
 [ENHYPEN – DARK BLOOD Concept Video](https://www.youtube.com/watch?v=47SAocGDKrw&list=RD47SAocGDKrw&start_radio=1&pp=ygUSZW5oeXBlbiBkYXJrIGJsb29koAcB&utm_source=chatgpt.com)
