@@ -1,7 +1,7 @@
 # FATUM
 
 **FATUM** is a gothic-themed tarot reading app built with Flutter. It lets users draw cards, receive prophecies, seal readings into a personal diary, and share insights with a community called The Coven.
-
+Link: https://fatum-371c1--pr-11-f7cot55z.web.app/
 ---
 
 ## Features
@@ -89,5 +89,4 @@ flutter run -d chrome
 ---
 
 ## CI / CD
-
 Pull requests from feature branches to `main` trigger a Firebase Hosting preview deploy via GitHub Actions.
