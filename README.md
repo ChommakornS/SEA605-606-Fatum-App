@@ -209,10 +209,6 @@ Developed for:
 
 <br/>
 
-🩸 **[fatum-371c1.web.app](https://fatum-371c1.web.app/)** 🩸
-
-<br/>
-
 ```
 — what fate has sealed, only blood can reveal —
 ```
