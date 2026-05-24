@@ -6,7 +6,7 @@
 
 <br/>
 
-### 🌑 [— Enter the Darkness —](https://fatum-371c1.web.app/)
+### 🌑 [![Enter the Darkness](https://img.shields.io/badge/🌑%20Enter%20the%20Darkness-Live-8B0000?style=for-the-badge&labelColor=0d0520)](https://fatum-371c1.web.app/)
 
 <br/>
 
