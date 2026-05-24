@@ -1,104 +1,230 @@
+// test/widget/widget_test.dart
+//
+// Widget Tests — FATUM App
+// Course  : SEA606 Modern Software Testing
+// Author  : Chommakorn Sontesadisai  68130702313
+//
+// Run: flutter test test/widget/widget_test.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fatum/models/tarot_card.dart';
+import 'package:fatum/pages/reading/topic_picker.dart';
+import 'package:fatum/pages/reading/card_grid.dart';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Root cause of timer issue:
+//
+// _CardGridStepState.initState() creates 22 Future.delayed timers:
+//   Future.delayed(Duration(milliseconds: (i * 120) % 1200), () {
+//     if (mounted) ctrl.repeat(reverse: true);  ← repeating animation
+//   });
+//
+// The maximum delay is 1200ms. After each Future fires, it starts a
+// *repeating* AnimationController. Both the pending Futures AND the
+// repeating controllers count as "pending timers."
+//
+// Fix strategy: pump time PAST 1200ms so all Futures fire, THEN pump
+// enough frames for the repeating animations to settle. We do this
+// INSIDE the test body (not in addTearDown) so timers are drained
+// before flutter_test checks invariants.
+//
+// We also call tester.pumpAndSettle() with a generous timeout so that
+// any remaining animation frames are flushed before the test ends.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Pump CardGridStep and drain all animation timers so tests can complete
+/// cleanly without "A Timer is still pending" errors.
+Future<void> pumpCardGrid(
+  WidgetTester tester, {
+  ReadingTopic topic = ReadingTopic.love,
+  VoidCallback? onBack,
+  void Function(List<int>, List<bool>)? onReveal,
+}) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        body: CardGridStep(
+          topic: topic,
+          onBack: onBack ?? () {},
+          onReveal: onReveal ?? (_, __) {},
+        ),
+      ),
+    ),
+  );
+
+  // Step 1: advance clock past the longest Future.delayed (1200 ms)
+  // so all 22 "start animation" timers fire.
+  await tester.pump(const Duration(milliseconds: 1300));
+
+  // Step 2: pump one more frame so the now-started AnimationControllers
+  // register their first tick and flutter_test is aware of them.
+  await tester.pump();
+}
+
+/// Drain all remaining timers/animations and dispose cleanly.
+/// Call this at the END of every test that used pumpCardGrid().
+Future<void> drainCardGrid(WidgetTester tester) async {
+  // Replace widget tree with an empty scaffold — this disposes
+  // CardGridStep and cancels its AnimationControllers via dispose().
+  await tester.pumpWidget(const MaterialApp(home: Scaffold()));
+  // Pump one final frame to let dispose() propagate.
+  await tester.pump();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 void main() {
-  group('Topic picker widget', () {
-    testWidgets('renders 6 topics; tapping one highlights it',
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WT-01 — TopicPicker
+  // ═══════════════════════════════════════════════════════════════════════════
+  group('WT-01 — TopicPicker', () {
+    testWidgets('renders all 6 topic labels', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: TopicPicker(onTopicSelected: (_) {}),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Love'),      findsOneWidget);
+      expect(find.text('Career'),    findsOneWidget);
+      expect(find.text('Health'),    findsOneWidget);
+      expect(find.text('Finance'),   findsOneWidget);
+      expect(find.text('Study'),     findsOneWidget);
+      expect(find.text('Life Path'), findsOneWidget);
+    });
+
+    testWidgets('tapping "Love" calls onTopicSelected(ReadingTopic.love)',
         (tester) async {
-      final topics = [
-        'Love',
-        'Career',
-        'Health',
-        'Finance',
-        'Study',
-        'Life Path',
-      ];
+      ReadingTopic? selected;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(
-              child: Wrap(
-                children: topics.map((topic) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Text(topic),
-                    ),
-                  );
-                }).toList(),
-              ),
+            body: TopicPicker(
+              onTopicSelected: (t) => selected = t,
             ),
           ),
         ),
       );
-
       await tester.pumpAndSettle();
-
-      expect(find.text('Love'), findsOneWidget);
-      expect(find.text('Career'), findsOneWidget);
-      expect(find.text('Health'), findsOneWidget);
-      expect(find.text('Finance'), findsOneWidget);
-      expect(find.text('Study'), findsOneWidget);
-      expect(find.text('Life Path'), findsOneWidget);
 
       await tester.tap(find.text('Love'));
-      await tester.pumpAndSettle();
-    });
-  });
+      // TopicPicker uses Future.delayed(150ms) before firing callback
+      await tester.pump(const Duration(milliseconds: 200));
 
-  group('Card grid widget', () {
-    testWidgets(
-        'renders 22 face-down cards; placed cards show as faded/used',
+      expect(selected, equals(ReadingTopic.love));
+    });
+
+    testWidgets('tapping "Career" calls onTopicSelected(ReadingTopic.career)',
         (tester) async {
+      ReadingTopic? selected;
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(
-              child: Wrap(
-                children: List.generate(
-                  22,
-                  (index) => Container(
-                    key: Key('card-$index'),
-                    width: 50,
-                    height: 80,
-                    margin: const EdgeInsets.all(4),
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+            body: TopicPicker(
+              onTopicSelected: (t) => selected = t,
             ),
           ),
         ),
       );
-
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('card-0')), findsOneWidget);
-      expect(find.byKey(const Key('card-21')), findsOneWidget);
-    });
-  });
+      await tester.tap(find.text('Career'));
+      await tester.pump(const Duration(milliseconds: 200));
 
-  group('Reveal button', () {
-    testWidgets(
-        'disabled with fewer than 3 slots filled; active when all 3 filled',
-        (tester) async {
+      expect(selected, equals(ReadingTopic.career));
+    });
+
+    testWidgets('renders all 6 subtitle texts', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ElevatedButton(
-              onPressed: null,
-              child: const Text('Reveal'),
-            ),
+            body: TopicPicker(onTopicSelected: (_) {}),
           ),
         ),
       );
+      await tester.pumpAndSettle();
 
-      final button =
-          tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+      expect(find.text('Romance · Connection'), findsOneWidget);
+      expect(find.text('Work · Ambition'),       findsOneWidget);
+      expect(find.text('Body · Wellbeing'),      findsOneWidget);
+      expect(find.text('Money · Luck'),          findsOneWidget);
+      expect(find.text('Growth · Learning'),     findsOneWidget);
+      expect(find.text('Purpose · Destiny'),     findsOneWidget);
+    });
+  });
 
-      expect(button.onPressed, isNull);
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WT-02 — CardGridStep
+  // ═══════════════════════════════════════════════════════════════════════════
+  group('WT-02 — CardGridStep', () {
+    testWidgets('renders title "Blood Moon Reading"', (tester) async {
+      await pumpCardGrid(tester);
+      expect(find.text('Blood Moon Reading'), findsOneWidget);
+      await drainCardGrid(tester);
+    });
+
+    testWidgets('renders slot labels: Past, Present, Future', (tester) async {
+      await pumpCardGrid(tester);
+      expect(find.text('Past'),    findsOneWidget);
+      expect(find.text('Present'), findsOneWidget);
+      expect(find.text('Future'),  findsOneWidget);
+      await drainCardGrid(tester);
+    });
+
+    testWidgets('renders "Reveal the fates" button', (tester) async {
+      await pumpCardGrid(tester);
+      expect(find.text('Reveal the fates'), findsOneWidget);
+      await drainCardGrid(tester);
+    });
+
+    testWidgets('topic badge is rendered for the given topic', (tester) async {
+      await pumpCardGrid(tester, topic: ReadingTopic.career);
+      expect(find.text('Career'), findsWidgets);
+      await drainCardGrid(tester);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WT-03 — Reveal Button disabled state
+  // ═══════════════════════════════════════════════════════════════════════════
+  group('WT-03 — Reveal Button disabled state', () {
+    testWidgets('Reveal button is disabled when 0/3 slots are filled',
+        (tester) async {
+      await pumpCardGrid(tester);
+
+      final btn = tester.widget<ElevatedButton>(
+        find.widgetWithText(ElevatedButton, 'Reveal the fates'),
+      );
+      expect(btn.onPressed, isNull,
+          reason: 'Button must be disabled until all 3 slots are filled');
+
+      await drainCardGrid(tester);
+    });
+
+    testWidgets('onBack callback fires when close (×) button is tapped',
+        (tester) async {
+      bool backCalled = false;
+
+      await pumpCardGrid(
+        tester,
+        topic: ReadingTopic.career,
+        onBack: () => backCalled = true,
+      );
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
+
+      expect(backCalled, isTrue,
+          reason: 'Tapping × must call onBack');
+
+      // drain BEFORE test ends — disposes AnimationControllers cleanly
+      await drainCardGrid(tester);
     });
   });
 }

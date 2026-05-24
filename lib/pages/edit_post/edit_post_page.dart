@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../data/tarot_data.dart';
 import '../../models/coven_post.dart';
 import '../../services/firestore_service.dart';
+import '../../core/validators.dart';
 
 class EditPostPage extends StatefulWidget {
   final CovenPost post;
@@ -43,7 +44,8 @@ class _EditPostPageState extends State<EditPostPage> {
   Future<void> _save() async {
     final text = _controller.text.trim();
 
-    if (text.isEmpty) {
+    // if (text.isEmpty)
+    if (!canSaveReflection(text)) {
       setState(() {
         _error = 'Reflection cannot be empty...';
       });

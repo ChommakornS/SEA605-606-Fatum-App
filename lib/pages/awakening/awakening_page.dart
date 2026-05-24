@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
 import '../../services/auth_service.dart';
 import '../../core/shell_page.dart';
+import '../../core/validators.dart';
 
 class AwakeningPage extends StatefulWidget {
   const AwakeningPage({super.key});
@@ -296,11 +297,12 @@ class _AwakeningPageState extends State<AwakeningPage> {
           controller: _emailController,
           hint: 'Enter your email',
           keyboardType: TextInputType.emailAddress,
-          validator: (v) {
-            if (v == null || v.isEmpty) return 'Email is required';
-            if (!v.contains('@')) return 'Enter a valid email';
-            return null;
-          },
+          // validator: (v) {
+          //   if (v == null || v.isEmpty) return 'Email is required';
+          //   if (!v.contains('@')) return 'Enter a valid email';
+          //   return null;
+          // },
+          validator: emailValidator,
         ),
         const SizedBox(height: 16),
         Text('Password', style: GoogleFonts.spectral(fontSize: 12, color: Colors.white54)),
