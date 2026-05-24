@@ -175,109 +175,102 @@ lib/
 
 ## Prerequisites
 
-Before running the project, ensure you have:
-
-- Flutter SDK installed
-- A Firebase project configured
-- Firebase Authentication enabled
-- Cloud Firestore enabled
-
-You will also need:
-
-```txt
-lib/firebase_options.dart
-```
-
-Generated using:
+- Flutter SDK
+- Firebase project with Authentication and Cloud Firestore enabled
+- `lib/firebase_options.dart` generated via:
 
 ```bash
 flutterfire configure
 ```
 
-> `firebase_options.dart` is gitignored and should not be committed.
+> `firebase_options.dart` is gitignored — do not commit it.
 
----
-
-## ▶ Run the App
+## Run the App
 
 ```bash
 flutter pub get
-flutter run
+flutter run              # Android / default device
+flutter run -d chrome    # Web (Chrome)
 ```
-
----
-
-## 🌐 Run on Web
-
-```bash
-flutter run -d chrome
-```
-
----
-
-# 🔥 Firebase Services Used
-
-- Firebase Authentication
-- Cloud Firestore
-- Firebase Hosting
 
 ---
 
 # 🧪 Testing
 
-- Widget Testing
-- Manual UI Testing
-- Authentication Flow Validation
-- Firebase Integration Testing
-- Form Validation Testing
-- CRUD Testing for The Coven posts
+FATUM's test suite is split into three tiers following the **Testing Pyramid** strategy.  
+All unit and widget tests run without a device or Firebase connection.
 
----
+## Run All Tests
 
-# 🎨 Design Direction
+```bash
+flutter test
+```
 
-FATUM explores:
-- Gothic minimalism
-- Ritual-inspired interaction
-- Mystical typography
-- Dark cinematic color palettes
-- Symbolic storytelling through tarot systems
+## Test Structure
+
+```
+test/
+├── unit/
+│   ├── reading_logic_test.dart    # 9 unit tests — Business Logic
+│   └── bva_validation_test.dart   # 29 BVA/EP tests — Input Validation
+└── widget/
+    └── widget_test.dart           # 10 widget tests — UI Components
+
+integration_test/
+└── app_test.dart                  # 10 integration tests — E2E Flows
+```
+
+## Coverage Summary
+
+| Tier | File | Cases | What It Tests |
+|---|---|---|---|
+| **Unit** | `reading_logic_test.dart` | 9 | ReadingLogic, Hive serialisation, Daily Lock, canSave |
+| **Unit (BVA)** | `bva_validation_test.dart` | 29 | Email, Password, reflectionText — EP & Boundary Value Analysis |
+| **Widget** | `widget_test.dart` | 10 | TopicPicker, CardGridStep, Reveal Button state |
+| **Integration** | `app_test.dart` | 10 | Navigation flows, scaffold rendering across all pages |
+
+## Run Individual Suites
+
+```bash
+# Unit — Business Logic
+flutter test test/unit/reading_logic_test.dart
+
+# Unit — Input Validation (BVA)
+flutter test test/unit/bva_validation_test.dart
+
+# Widget
+flutter test test/widget/widget_test.dart
+
+# Integration (no device required for navigation tests)
+flutter test integration_test/app_test.dart
+
+# Integration — Android device
+flutter test integration_test/app_test.dart -d <device_id>
+```
+
+## Requirements Coverage
+
+| Requirement | Description | Covered By |
+|---|---|---|
+| R1 | Secure Login/Logout (Firebase Auth) | IT-01, IT-03–05, IT-08 |
+| R2 | Routing across 5+ pages | UT-01–03, WT-01–03, IT-NAV-01–02 |
+| R3 | Android + Web execution | All integration tests |
+| R4 | Firestore + Hive data storage | UT-04, UT-05, UT-08, IT-01–08 |
+| R5 | CLI-runnable via `flutter test` | All tiers |
 
 ---
 
 # 🚢 CI / CD
 
-This project uses **GitHub Actions** for automated preview deployments.
-
-### Workflow
-- Pull requests targeting `main`
-- Trigger Firebase Hosting preview deploys
-- Generate sharable preview environments automatically
-
----
-
-# 🕯 Future Ideas
-
-Potential expansions for FATUM:
-
-- Full 78-card tarot deck
-- AI-generated prophecy interpretations
-- Daily tarot draws
-- Push notifications
-- User profiles & follower system
-- Ritual achievements / progression
-- Dark ambient soundtrack
+GitHub Actions automatically deploys preview environments on pull requests targeting `main` via Firebase Hosting.
 
 ---
 
 # 📜 Academic Use
 
-This project was developed as part of coursework for:
-
-- SEA605 — Mobile Application Design and Development
-- SEA606 — Software Testing
-
-It is intended for educational and portfolio purposes.
+Developed for:
+- **SEA605** — Mobile Application Design and Development  
+- **SEA606** — Modern Software Testing
 
 ---
 
