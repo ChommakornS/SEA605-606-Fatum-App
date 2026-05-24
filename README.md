@@ -6,7 +6,7 @@
 
 <br/>
 
-### 🌑 [— Enter the Darkness — fatum-371c1.web.app](https://fatum-371c1.web.app/)
+### 🌑 [— Enter the Darkness —](https://fatum-371c1.web.app/)
 
 <br/>
 
