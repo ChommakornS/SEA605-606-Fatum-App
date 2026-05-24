@@ -17,15 +17,6 @@ FATUM was heavily inspired by ENHYPEN's **DARK BLOOD** concept and atmosphere �
 
 ---
 
-## 📚 Academic Context
-
-This project was developed for:
-
-- **SEA605 — Mobile Application Design and Development**
-- **SEA606 — Software Testing**
-
----
-
 ## ✨ Overview
 
 **FATUM** is a gothic-themed tarot reading application built with Flutter.  
