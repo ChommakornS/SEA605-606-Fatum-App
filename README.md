@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🩸 ꜰᴀᴛᴜᴍ 🧛
+# 🩸 ꜰᴀᴛᴜᴍ 🧛🏻‍♂️
 
 ### 🕯 *The blood moon reveals what fate has sealed* 🕯
 
