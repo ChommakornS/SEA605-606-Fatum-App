@@ -2,9 +2,8 @@
 *A gothic tarot experience forged in Flutter.*
 
 🌑 **Live Preview (Deployed App):**  
-[FATUM Web App](https://fatum-371c1--pr-11-f7cot55z.web.app/?utm_source=chatgpt.com)
+[FATUM Web App](https://fatum-371c1.web.app/)
 
-> ⚠️ Link will expire on **20 May 2026**
 
 ---
 
