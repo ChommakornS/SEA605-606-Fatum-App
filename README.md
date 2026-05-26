@@ -16,7 +16,7 @@
 
 <br/>
 
-🦇 *Inspired by ENHYPEN · [DARK BLOOD](https://www.youtube.com/watch?v=47SAocGDKrw)* 🦇
+🦇 *Inspired by ENHYPEN · [DARK BLOOD](https://youtu.be/wXFLzODIdUI?si=tFk57G0vGO2okMtJ)* 🦇
 
 ---
 
